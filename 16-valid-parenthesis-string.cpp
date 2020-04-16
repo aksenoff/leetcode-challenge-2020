@@ -1,3 +1,5 @@
+// https://leetcode.com/problems/valid-parenthesis-string/
+
 bool check(string s,int& stack, int& stars)
 {
     char c;
