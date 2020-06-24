@@ -15,11 +15,12 @@ class Solution {
     int tracePath(TreeNode* root, int depth, int path)
     { // path is no of node in last complete level
         int result = 0;
+        depth--; // decrementing to get value for shifting bit
         TreeNode* node = root;        
-        for (int i = 0; i < depth; ++i)
+        for (int i = 0; i <= depth; ++i)
         { // path bits are instructions to go left/right
-            if (!(path & (1 << (depth - 1)))) node = node->left;
-            else node = node->right;
+            if (path & (1 << depth)) node = node->right;
+            else node = node->left;
             path <<= 1;
         }
         if (node->left) result++;
@@ -37,14 +38,14 @@ public:
             node = node->right;
             depth++;
         }
-        int a = 0, b = pow(2, depth) - 1;
+        int a = 0, b = pow(2, depth) - 1, mid, res;
         while (a < b) // binary search through last complete row nodes
         {
-            int mid = a + (b - a) / 2;
-            int res = tracePath(root, depth, mid);
-            if (res == 1) return pow(2, depth + 1) + 2 * mid;
-            else if (res == 2) a = mid + 1;
-            else b = mid - 1;
+            mid = a + (b - a) / 2;
+            res = tracePath(root, depth, mid);
+            if (res == 2) a = mid + 1; 
+            else if (!res) b = mid - 1;
+            else return pow(2, depth + 1) + 2 * mid;
         }
         return pow(2, depth + 1) - 1 + 2 * a + tracePath(root, depth, a);
     }
